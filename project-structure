@@ -1,0 +1,44 @@
+laravel-event-platform/
+├── app/
+│   ├── Models/
+│   │   ├── User.php
+│   │   ├── Event.php
+│   │   ├── Participation.php
+│   │   └── Notification.php
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Api/
+│   │   │   │   ├── AuthController.php
+│   │   │   │   ├── EventController.php
+│   │   │   │   ├── ParticipationController.php
+│   │   │   │   └── NotificationController.php
+│   │   ├── Requests/
+│   │   │   ├── Event/
+│   │   │   │   ├── StoreEventRequest.php
+│   │   │   │   └── UpdateEventRequest.php
+│   │   │   └── Auth/
+│   │   │       ├── LoginRequest.php
+│   │   │       └── RegisterRequest.php
+│   │   └── Resources/
+│   │       ├── EventResource.php
+│   │       └── UserResource.php
+│   ├── Services/
+│   │   ├── EventService.php
+│   │   └── NotificationService.php
+│   ├── Notifications/
+│   │   ├── EventInvitation.php
+│   │   └── NewParticipant.php
+│   ├── Events/
+│   │   ├── EventCreated.php
+│   │   └── UserJoinedEvent.php
+│   └── Listeners/
+│       ├── SendEventCreatedNotification.php
+│       └── SendNewParticipantNotification.php
+├── database/
+│   └── migrations/
+│       ├── create_users_table.php
+│       ├── create_events_table.php
+│       ├── create_participations_table.php
+│       └── create_notifications_table.php
+└── routes/
+    └── api.php 
