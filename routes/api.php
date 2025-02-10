@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\ParticipationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +17,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::prefix('v1')->group(function () {
+    // Auth routes
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
+
+    // Protected routes
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
+
+        // Events
+        Route::apiResource('events', EventController::class);
+
+        // Participations
+        Route::post('events/{event}/join', [ParticipationController::class, 'join']);
+        Route::post('events/{event}/leave', [ParticipationController::class, 'leave']);
+
+        // User events
+        Route::get('user/events', [EventController::class, 'userEvents']);
+        Route::get('user/participations', [ParticipationController::class, 'userParticipations']);
+    });
 });
