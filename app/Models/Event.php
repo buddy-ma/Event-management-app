@@ -22,9 +22,10 @@ class Event extends Model
         'status',
         'visibility',
         'is_online',
-        'online_url'
+        'online_url',
+        'price',
+        'tags'
     ];
-
 
     protected $casts = [
         'start_date' => 'datetime',

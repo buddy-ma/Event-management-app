@@ -38,6 +38,7 @@ Route::prefix('v1')->group(function () {
 
         // User events
         Route::get('user/events', [EventController::class, 'userEvents']);
+        Route::get('topEvents', [EventController::class, 'topEvents']);
         Route::get('user/participations', [ParticipationController::class, 'userParticipations']);
     });
 });

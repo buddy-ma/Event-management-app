@@ -24,10 +24,12 @@ class EventResource extends JsonResource
             'end_date' => $this->end_date,
             'max_participants' => $this->max_participants,
             'is_published' => $this->is_published,
-
+            'price' => $this->price,
+            'tags' => $this->tags,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-
+            'is_online' => $this->is_online,
+            'online_url' => $this->online_url,
             // Related resources
             'host' => new UserResource($this->whenLoaded('host')),
             'participants' => UserResource::collection($this->whenLoaded('participants')),

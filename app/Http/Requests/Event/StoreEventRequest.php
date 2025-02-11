@@ -33,6 +33,8 @@ class StoreEventRequest extends FormRequest
             'visibility' => ['sometimes', 'string', 'in:public,private'],
             'is_online' => ['sometimes', 'boolean'],
             'online_url' => ['sometimes', 'nullable', 'url'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'tags' => ['sometimes', 'nullable', 'string'],
         ];
     }
 

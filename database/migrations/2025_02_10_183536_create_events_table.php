@@ -16,7 +16,7 @@ return new class extends Migration
             $table->datetime('start_date');
             $table->datetime('end_date')->nullable();
             $table->string('address')->nullable();
-            $table->integer('max_participants');
+            $table->integer('max_participants')->default(0);
             $table->enum('category', ['social', 'sports', 'education', 'entertainment', 'other'])
                 ->default('other');
             $table->enum('status', ['draft', 'published', 'cancelled', 'completed'])
@@ -24,6 +24,8 @@ return new class extends Migration
             $table->enum('visibility', ['public', 'private'])->default('public');
             $table->boolean('is_online')->default(false);
             $table->string('online_url')->nullable();
+            $table->string('tags')->nullable();
+            $table->double('price')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

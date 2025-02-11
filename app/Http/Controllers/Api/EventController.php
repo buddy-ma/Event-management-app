@@ -14,6 +14,43 @@ use App\Http\Requests\Event\UpdateEventRequest;
 
 class EventController extends Controller
 {
+    public function userEvents(Request $request): JsonResponse
+    {
+        $events = $request->user()->events()->with(['host', 'participants'])->get();
+        return response()->json([
+            'data' => EventResource::collection($events)
+        ]);
+    }
+
+    public function topEvents(): JsonResponse
+    {
+        $events = Event::query()
+            ->with(['host', 'participants'])
+            ->published()
+            ->upcoming()
+            ->orderBy('created_at', 'desc')
+            ->limit(6)
+            ->get()
+            ->map(function ($event) {
+                return [
+                    'title' => $event->title,
+                    'image' => $event->image,
+                    'price' => $event->price,
+                    'is_online' => $event->is_online,
+                    'online_url' => $event->online_url,
+                    'participants' => $event->participants->count(),
+                    'start_date' => $event->start_date->format('Y-m-d'),
+                    'address' => $event->address,
+                    'category' => $event->category,
+                    'is_host' => $event->isHost(Auth::user()),
+                ];
+            });
+
+        return response()->json([
+            'data' => $events
+        ]);
+    }
+
     public function index(Request $request): JsonResponse
     {
         $events = Event::query()
@@ -58,8 +95,6 @@ class EventController extends Controller
 
     public function update(UpdateEventRequest $request, Event $event): JsonResponse
     {
-        $this->authorize('update', $event);
-
         $event->update($request->validated());
 
         return response()->json([
@@ -70,8 +105,6 @@ class EventController extends Controller
 
     public function destroy(Event $event): JsonResponse
     {
-        $this->authorize('delete', $event);
-
         $event->delete();
 
         return response()->json([
