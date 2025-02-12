@@ -23,6 +23,8 @@ Route::prefix('v1')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
 
+    Route::get('topEvents', [EventController::class, 'topEvents']);
+
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', function (Request $request) {
@@ -38,7 +40,6 @@ Route::prefix('v1')->group(function () {
 
         // User events
         Route::get('user/events', [EventController::class, 'userEvents']);
-        Route::get('topEvents', [EventController::class, 'topEvents']);
         Route::get('user/participations', [ParticipationController::class, 'userParticipations']);
     });
 });

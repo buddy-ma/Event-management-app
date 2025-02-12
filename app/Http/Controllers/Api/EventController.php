@@ -33,6 +33,7 @@ class EventController extends Controller
             ->get()
             ->map(function ($event) {
                 return [
+                    'id' => $event->id,
                     'title' => $event->title,
                     'image' => $event->image,
                     'price' => $event->price,
@@ -42,7 +43,7 @@ class EventController extends Controller
                     'start_date' => $event->start_date->format('Y-m-d'),
                     'address' => $event->address,
                     'category' => $event->category,
-                    'is_host' => $event->isHost(Auth::user()),
+                    'user_id' => $event->user_id,
                 ];
             });
 
