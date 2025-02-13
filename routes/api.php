@@ -24,6 +24,7 @@ Route::prefix('v1')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
 
     Route::get('topEvents', [EventController::class, 'topEvents']);
+    Route::get('getEvents', [EventController::class, 'getEvents']);
 
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {

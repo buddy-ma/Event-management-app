@@ -22,7 +22,7 @@ class EventController extends Controller
         ]);
     }
 
-    public function topEvents(): JsonResponse
+    public function topEvents(Request $request): JsonResponse
     {
         $events = Event::query()
             ->with(['host', 'participants'])
@@ -31,7 +31,7 @@ class EventController extends Controller
             ->orderBy('created_at', 'desc')
             ->limit(6)
             ->get()
-            ->map(function ($event) {
+            ->map(function ($event) use ($request) {
                 return [
                     'id' => $event->id,
                     'title' => $event->title,
@@ -44,6 +44,8 @@ class EventController extends Controller
                     'address' => $event->address,
                     'category' => $event->category,
                     'user_id' => $event->user_id,
+                    'has_spots' => $event->hasAvailableSpots(),
+                    'has_joined' => $request->user() ? $event->participants->contains($request->user()->id) : false,
                 ];
             });
 
@@ -52,7 +54,7 @@ class EventController extends Controller
         ]);
     }
 
-    public function index(Request $request): JsonResponse
+    public function getEvents(Request $request): JsonResponse
     {
         $events = Event::query()
             ->when($request->category, fn($q) => $q->where('category', $request->category))
@@ -78,6 +80,8 @@ class EventController extends Controller
             ...$request->validated(),
             'user_id' => $request->user()->id,
         ]);
+
+        $event->participants()->attach($request->user()->id, ['status' => 'confirmed']);
 
         EventCreated::dispatch($event);
 

@@ -45,10 +45,10 @@ class ParticipationController extends Controller
         }
 
         // Dispatch event for real-time updates
-        UserJoinedEvent::dispatch($event, auth()->user());
+        // UserJoinedEvent::dispatch($event, auth()->user());
 
         // Notify event host
-        $event->host->notify(new NewParticipant($event, auth()->user()));
+        // $event->host->notify(new NewParticipant($event, auth()->user()));
 
         return response()->json([
             'message' => 'Successfully joined the event',
