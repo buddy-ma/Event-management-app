@@ -10,6 +10,7 @@ use App\Notifications\NewParticipant;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use App\Models\Notification;
 
 class ParticipationController extends Controller
 {
@@ -44,11 +45,28 @@ class ParticipationController extends Controller
             ]);
         }
 
-        // Dispatch event for real-time updates
-        // UserJoinedEvent::dispatch($event, auth()->user());
+        try {
+            // Create notification record
+            Notification::create([
+                'user_id' => $event->host_id,
+                'type' => 'user_joined_event',
+                'data' => json_encode([
+                    'event_id' => $event->id,
+                    'event_title' => $event->title,
+                    'user_id' => auth()->id(),
+                    'user_name' => auth()->user()->name,
+                ]),
+            ]);
 
-        // Notify event host
-        // $event->host->notify(new NewParticipant($event, auth()->user()));
+            // Dispatch event for real-time updates
+            UserJoinedEvent::dispatch($event, auth()->user());
+
+            // Notify event host
+            $event->host->notify(new NewParticipant($event, auth()->user()));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send notifications: ' . $e->getMessage());
+            // Continue execution since the user has already joined successfully
+        }
 
         return response()->json([
             'message' => 'Successfully joined the event',

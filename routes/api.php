@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ParticipationController;
 
 /*
@@ -42,5 +43,9 @@ Route::prefix('v1')->group(function () {
         // User events
         Route::get('user/events', [EventController::class, 'userEvents']);
         Route::get('user/participations', [ParticipationController::class, 'userParticipations']);
+
+        // Notifications
+        Route::get('notifications', [NotificationController::class, 'index']);
+        Route::post('notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
     });
 });

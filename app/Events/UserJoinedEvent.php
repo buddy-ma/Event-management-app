@@ -4,37 +4,43 @@ namespace App\Events;
 
 use App\Models\Event;
 use App\Models\User;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
 
 class UserJoinedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(
-        public Event $event,
-        public User $user
-    ) {}
+    public $event;
+    public $user;
 
-    public function broadcastOn(): array
+    public function __construct(Event $event, User $user)
     {
-        return [
-            new Channel('event.' . $this->event->id),
-        ];
+        $this->event = $event;
+        $this->user = $user;
     }
 
-    public function broadcastAs(): string
+    public function broadcastOn()
+    {
+        // Broadcasting to the event host's private channel
+        return new PrivateChannel('user.' . $this->event->host_id);
+    }
+
+    public function broadcastAs()
     {
         return 'user.joined';
     }
 
-    public function broadcastWith(): array
+    public function broadcastWith()
     {
         return [
-            'event_id' => $this->event->id,
+            'event' => [
+                'id' => $this->event->id,
+                'title' => $this->event->title,
+            ],
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
