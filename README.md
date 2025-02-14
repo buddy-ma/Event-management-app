@@ -67,27 +67,32 @@ laravel-event-platform/
 
 ## API Endpoints
 
-POST /api/v1/login # User login
-POST /api/v1/register # User registration
-POST /api/v1/logout # User logout
-GET /api/v1/me # Get current user
+### Authentication
+
+-   POST /api/v1/login # User login
+-   POST /api/v1/register # User registration
+-   GET /api/v1/user # Get current user profile
 
 ### Event Management
 
-GET /api/v1/events # Get all events
-GET /api/v1/events/{event} # Get a single event
-POST /api/v1/events # Create a new event
-PUT /api/v1/events/{event} # Update an event
-DELETE /api/v1/events/{event} # Delete an event
+-   GET /api/v1/events # Get all events
+-   GET /api/v1/topEvents # Get featured/top events
+-   GET /api/v1/getEvents # Get paginated events with filters
+-   GET /api/v1/user/events # Get user's created events
+-   POST /api/v1/events # Create a new event
+-   PUT /api/v1/events/{event} # Update an event
+-   DELETE /api/v1/events/{event} # Delete an event
 
 ### Participation
 
-POST /api/v1/events/{event}/join # Join an event
-POST /api/v1/events/{event}/leave # Leave an event
+-   POST /api/v1/events/{event}/join # Join an event
+-   POST /api/v1/events/{event}/leave # Leave an event
+-   GET /api/v1/user/participations # Get user's event participations
 
 ### Notifications
 
-GET /api/v1/notifications # Get all notifications
+-   GET /api/v1/notifications # Get user notifications
+-   POST /api/v1/notifications/{notification}/read # Mark notification as read
 
 ## Models
 
@@ -95,21 +100,31 @@ GET /api/v1/notifications # Get all notifications
 
 -   Basic authentication fields
 -   Profile information
--   Notification preferences
+-   Relationship with events and participations
 
 ### Event
 
 -   Title and description
--   Date and time
--   Location (with coordinates)
+-   Start date
+-   Online/offline status
+-   Location or online URL
+-   Price
+-   Category
 -   Maximum participants
--   Category and visibility settings
--   Status tracking
+-   Relationship with host and participants
 
 ### Participation
 
 -   Event and user relationships
--   Status tracking
+-   Status tracking (pending, confirmed, cancelled, declined)
+-   Timestamp information
+
+### Notification
+
+-   User relationship
+-   Type of notification
+-   Data payload
+-   Read/unread status
 -   Timestamp information
 
 ## Real-time Notifications
@@ -178,3 +193,78 @@ Please read our contributing guidelines before submitting pull requests.
 ## License
 
 This project is licensed under the MIT License.
+
+## Installation Requirements
+
+-   PHP >= 8.1
+-   Composer
+-   MySQL >= 5.7 or PostgreSQL >= 10.0
+-   Node.js & NPM (for frontend assets)
+-   Redis (for queue and broadcasting)
+
+## Environment Setup
+
+The following environment variables need to be configured in your `.env` file:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+
+BROADCAST_DRIVER=pusher
+PUSHER_APP_ID=your_pusher_app_id
+PUSHER_APP_KEY=your_pusher_key
+PUSHER_APP_SECRET=your_pusher_secret
+PUSHER_APP_CLUSTER=your_cluster
+
+```
+
+## Testing
+
+Run the test suite with:
+
+```bash
+php artisan test
+```
+
+For specific test suites:
+
+```bash
+php artisan test --testsuite=Feature
+php artisan test --testsuite=Unit
+```
+
+## API Documentation
+
+API documentation is available at `/api/documentation` when running the application locally. You can also find the Postman collection in the `docs` folder.
+
+## Error Handling
+
+The API uses standard HTTP response codes:
+
+-   200: Success
+-   201: Created
+-   400: Bad Request
+-   401: Unauthorized
+-   403: Forbidden
+-   404: Not Found
+-   422: Validation Error
+-   500: Server Error
+
+## Rate Limiting
+
+API endpoints are rate-limited to:
+
+-   Authentication endpoints: 5 requests per minute
+-   Other endpoints: 60 requests per minute
+
+## Support
+
+For support, please email support@eventplatform.com or create an issue in the GitHub repository.
+
+## Changelog
+
+Please see [CHANGELOG.md](CHANGELOG.md) for more information on recent changes.
